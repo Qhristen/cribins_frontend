@@ -19,17 +19,17 @@ const Hero = () => {
           height={400}
         />
         <div>
-          <div className='flex items-center gap-2 pb-4'>
+          <div className='flex items-center pb-4'>
             {/* <Image
               src={theme === "light" ? <Logo_Dark /> : <Logo_light />}
               width={30}
               height={30}
               alt="cribins_logo"
             /> */}
-            {theme === "light" ? <LogoDark /> : <LogoLight  />}
-            {/* <span className="font-bold text-2xl">Cribins</span> */}
+            {theme === "light" ? <LogoDark className="scale-90" /> : <LogoLight  className="scale-90" />}
+            <span className="font-bold text-4xl">Cribins</span>
           </div>
-          <h1 className="text-4xl font-black">
+          <h1 className="text-6xl font-black">
             Buy, rent, or sell <br /> your property <br /> easily.
           </h1>
 
