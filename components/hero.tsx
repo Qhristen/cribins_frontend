@@ -2,6 +2,7 @@
 'use client';
 
 import { LogoDark, LogoLight } from '@/assets/icons';
+import { AppIcon } from '@/assets/images';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import React from 'react';
@@ -13,7 +14,7 @@ const Hero = () => {
         <div className="flex items-center justify-center gap-10 space-y-4 p-4 pt-10">
         <Image
           alt="app"
-          src={`/images/app.png`}
+          src={AppIcon}
           className="w-50 h-50 scale-90"
           width={400}
           height={400}
