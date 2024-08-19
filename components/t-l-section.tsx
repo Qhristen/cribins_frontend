@@ -28,8 +28,8 @@ const TLSection = () => {
         </h1>
 
         <p className="pt-4 text-sm text-wrap">
-          Whether it’s selling your current home, gettingfinancing, or
-          buying a new home, we make it easy andefficient. The best
+          Whether it’s selling your current home, getting financing, or
+          buying a new home, we make it easy and efficient. The best
           part? you’ll save a bunch of moneyand time with our services.
         </p>
         <div className='flex items-center flex-col gap-3 pt-6 lg:flex-row'>
