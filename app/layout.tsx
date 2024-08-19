@@ -1,4 +1,3 @@
-import Header from '@/components/layout/header';
 import Providers from '@/components/layout/providers';
 import { Toaster } from '@/components/ui/toaster';
 import '@uploadthing/react/styles.css';
@@ -25,9 +24,9 @@ export default async function RootLayout({
       <body className={`${plus_Jakarta_Sans.className}`}>
         <NextTopLoader showSpinner={false} />
         <Providers>
-          <Header />
           <Toaster />
           {children}
+    
         </Providers>
       </body>
     </html>

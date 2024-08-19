@@ -1,12 +1,15 @@
+import Container from '@/components/container';
 import Hero from '@/components/hero';
-import Image from 'next/image';
-import React from 'react';
+import TLSection from '@/components/t-l-section';
 
 const Home = () => {
   return (
-    <div className="pt-10">
-     <Hero />
-    </div>
+    <Container>
+      <div className="pt-10">
+        <Hero />
+        <TLSection />
+      </div>
+    </Container>
   );
 };
 
