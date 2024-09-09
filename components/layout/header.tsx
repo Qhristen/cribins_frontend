@@ -1,4 +1,4 @@
-'use client'; 
+'use client';
 
 import { LogoDark, LogoLight } from '@/assets/icons';
 import ThemeToggle from '@/components/layout/ThemeToggle/theme-toggle';
@@ -19,7 +19,7 @@ export default function Header() {
             ) : (
               <Image src={LogoLight} alt="logo_white" />
             )} */}
-            Cribins
+            {/* Cribins */}
           </Link>
         </div>
         <div className="flex items-center gap-2">
