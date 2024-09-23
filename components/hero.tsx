@@ -44,7 +44,7 @@ const Hero = () => {
           {/* <span className="font-bold text-4xl">Cribins</span> */}
         </div>
         <h1 className="text-wrap  text-2xl font-black text-primary lg:text-4xl">
-          Seamlessly Connecting <br /> You to Your Next Home.
+          Download our mobile app
         </h1>
 
         <p className="text-md text-wrap pt-4">

@@ -11,16 +11,19 @@ const Footer = () => {
   const { theme } = useTheme();
 
   return (
-    <Card className="flex h-screen w-full items-center justify-center rounded-none border-none">
+    <Card className="flex items-center justify-center rounded-none border-none">
       <div>
-        <h4 className="text-2xl font-medium pb-4 text-center">Follow us on:</h4>
-        <Link href={`https://www.linkedin.com/company/cribins/`}     target="_blank">
+        {/* <h4 className="text-2xl font-medium pb-4 text-center">Follow us on:</h4> */}
+        <Link
+          href={`https://www.linkedin.com/company/cribins/`}
+          target="_blank"
+        >
           <Button size={`lg`} variant={`ghost`}>
             Linkedin
           </Button>
         </Link>
 
-        <Link href={`https://x.com/officialcribins`}     target="_blank">
+        <Link href={`https://x.com/officialcribins`} target="_blank">
           <Button size={`lg`} variant={`ghost`}>
             X
           </Button>
