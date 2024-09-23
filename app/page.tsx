@@ -8,7 +8,7 @@ const Home = () => {
     <Container>
       <div className="pt-10">
         <Linstings />
-        <Hero />
+        {/* <Hero /> */}
         {/* <TLSection /> */}
       </div>
     </Container>

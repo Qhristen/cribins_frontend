@@ -1,6 +1,6 @@
 'use client';
 
-import { LogoDark, LogoLight } from '@/assets/icons';
+import { CribinsLogo, LogoDark, LogoLight } from '@/assets/icons';
 import ThemeToggle from '@/components/layout/ThemeToggle/theme-toggle';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
@@ -17,11 +17,7 @@ export default function Header() {
         <nav className="flex h-14 items-center justify-between">
           <div className="">
             <Link href={`/`} className="text-2xl font-medium tracking-widest">
-              {/* {theme === 'light' ? (
-              <Image src={LogoDark} alt="logo_dark" />
-            ) : (
-              <Image src={LogoLight} alt="logo_white" />
-            )} */}
+              <Image src={CribinsLogo} className="h-10 w-10" alt="logo_dark" />
               {/* Cribins */}
             </Link>
           </div>
