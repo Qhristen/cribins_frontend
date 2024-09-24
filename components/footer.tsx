@@ -11,7 +11,7 @@ const Footer = () => {
   const { theme } = useTheme();
 
   return (
-    <Card className="flex items-center justify-center rounded-none border-none">
+    <Card className="mt-20 flex items-center justify-center rounded-none border-none">
       <div>
         {/* <h4 className="text-2xl font-medium pb-4 text-center">Follow us on:</h4> */}
         <Link

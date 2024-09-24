@@ -1,13 +1,8 @@
 import { db } from '@/lib/firebase/firebase-admin';
-
-interface ListingData {
-  title: string;
-  content: string;
-  imageUrls: string[];
-}
+import { Property } from '@/types';
 
 export async function POST(req: Request) {
-  let body: ListingData;
+  let body: Property;
 
   try {
     body = await req.json();
@@ -17,10 +12,28 @@ export async function POST(req: Request) {
     });
   }
 
-  const { title, content, imageUrls } = body;
+  const {
+    title,
+    description,
+    imageUrls,
+    address,
+    location,
+    price,
+    propertyStatus,
+    propertyType
+  } = body;
 
   // Validate required fields
-  if (!title || !content || !Array.isArray(imageUrls)) {
+  if (
+    !title ||
+    !description ||
+    !price ||
+    !propertyStatus ||
+    !propertyType ||
+    !address ||
+    !location ||
+    !Array.isArray(imageUrls)
+  ) {
     return new Response(
       JSON.stringify({
         message: 'Title, content, and image URLs are required'
@@ -33,7 +46,12 @@ export async function POST(req: Request) {
     // Create the post in Firestore with an array of image URLs
     const docRef = await db.collection('listings').add({
       title,
-      content,
+      address,
+      location,
+      price,
+      propertyStatus,
+      description,
+      propertyType,
       imageUrls, // Save array of image URLs
       createdAt: new Date().toISOString()
     });

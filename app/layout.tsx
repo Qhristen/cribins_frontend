@@ -5,8 +5,12 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
+import 'react-photo-view/dist/react-photo-view.css';
 
-const plus_Jakarta_Sans = Plus_Jakarta_Sans({ subsets: ['latin'] });
+const plus_Jakarta_Sans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600', '700', '800']
+});
 
 export const metadata: Metadata = {
   title: 'Cribins',
@@ -26,7 +30,6 @@ export default async function RootLayout({
         <Providers>
           <Toaster />
           {children}
-    
         </Providers>
       </body>
     </html>

@@ -22,4 +22,18 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 const auth = admin.auth();
 
-export { db, auth };
+async function verifyToken(request: Request) {
+  const token = request.headers.get('Authorization')?.replace('Bearer ', '');
+  if (!token) {
+    throw new Error('Authorization token is missing');
+  }
+
+  try {
+    const decodedToken = await auth.verifyIdToken(token);
+    return decodedToken;
+  } catch (error) {
+    throw new Error('Invalid or expired token');
+  }
+}
+
+export { db, auth, verifyToken };

@@ -15,7 +15,7 @@ import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import GoogleSignInButton from '../github-auth-button';
+import GoogleSignInButton from '../google-auth-button';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' })
@@ -28,7 +28,7 @@ export default function UserAuthForm() {
   const callbackUrl = searchParams.get('callbackUrl');
   const [loading, setLoading] = useState(false);
   const defaultValues = {
-    email: 'demo@gmail.com'
+    email: ''
   };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),

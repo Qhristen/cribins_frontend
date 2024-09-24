@@ -18,6 +18,7 @@ export interface Property {
   price: number;
   propertyType: string;
   propertyStatus: string;
+  imageUrls: string[];
   location: string;
   createdAt: string;
 }
