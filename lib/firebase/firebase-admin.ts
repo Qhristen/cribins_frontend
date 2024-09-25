@@ -15,7 +15,7 @@ if (!admin.apps.length) {
     }),
     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    databaseURL: 'https://cribins-658e1-default-rtdb.firebaseio.com'
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL
   });
 }
 

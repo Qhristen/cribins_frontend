@@ -11,25 +11,29 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { User } from '@/types';
 
-export function UserNav() {
-  // const { data: session } = useSession();
-
+interface Props {
+  user: User | null;
+}
+export function UserNav({ user }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={''} alt={''} />
-            <AvatarFallback>{'F'}</AvatarFallback>
+            <AvatarImage src={user?.photoURL} alt={''} />
+            <AvatarFallback>
+              {user?.name?.substring(0, 1).toString()}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Killer</p>
-            <p className="text-xs leading-none text-muted-foreground">Bean</p>
+            <p className="text-sm font-medium leading-none">{user?.name}</p>
+            {/* <p className="text-xs leading-none text-muted-foreground">Bean</p> */}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

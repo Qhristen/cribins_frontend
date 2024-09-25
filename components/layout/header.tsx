@@ -7,9 +7,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { UserNav } from './user-nav';
 import Container from '../container';
+import { useAuth } from '@/context/auth-context';
+import GoogleSignInButton from '../google-auth-button';
 
 export default function Header() {
   const { theme } = useTheme();
+  const { user } = useAuth();
 
   return (
     <div className="fixed left-0 right-0 top-0 z-20 ">
@@ -22,7 +25,7 @@ export default function Header() {
             </Link>
           </div>
           <div className="flex items-center gap-2">
-            <UserNav />
+            {user ? <UserNav user={user} /> : <GoogleSignInButton />}
             <ThemeToggle />
           </div>
         </nav>

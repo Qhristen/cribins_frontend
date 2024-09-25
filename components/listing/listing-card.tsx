@@ -10,7 +10,6 @@ interface Props {
 }
 
 export default function LinstingCard({ property }: Props) {
-  console.log(property);
   return (
     <Card className="relative h-80 overflow-clip">
       <Image

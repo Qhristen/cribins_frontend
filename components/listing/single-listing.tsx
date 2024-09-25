@@ -2,16 +2,19 @@
 
 import fetcher from '@/lib/fetcher';
 import { Property } from '@/types';
-import useSWR from 'swr';
-import Carousel from '../ui/carousel';
+import { Check } from 'lucide-react';
 import Image from 'next/image';
-import { PhotoView } from 'react-photo-view';
-import { Check, LocateIcon } from 'lucide-react';
-import { Button } from '../ui/button';
 import { CiLocationOn } from 'react-icons/ci';
-import Link from 'next/link';
 import { GoCopy } from 'react-icons/go';
-import { toast, useToast } from '../ui/use-toast';
+import { PhotoView } from 'react-photo-view';
+import useSWR from 'swr';
+import { Button } from '../ui/button';
+import Carousel from '../ui/carousel';
+import { useToast } from '../ui/use-toast';
+import { auth } from '@/lib/firebase/firebase';
+import { useAuth } from '@/context/auth-context';
+import GoogleSignInButton from '../google-auth-button';
+import { useEffect, useState } from 'react';
 
 interface PageProps {
   listingId: string;
@@ -22,8 +25,11 @@ const SingleListingClient = ({ listingId }: PageProps) => {
     listingId ? `/api/listings/${listingId}` : null,
     fetcher
   );
+
+  const [origin, setOrigin] = useState('');
+
+  const { user: authuser } = useAuth();
   const { toast } = useToast();
-  const blinkUrl = `${window.location.origin}/api/action/${listingId}`;
 
   const onCopy = () => {
     navigator.clipboard.writeText(blinkUrl);
@@ -34,26 +40,66 @@ const SingleListingClient = ({ listingId }: PageProps) => {
     });
   };
 
+  console.log(data, 'pro');
+  const user = auth.currentUser;
+
+  const RequestInspection = async (userId: string, propertyId: string) => {
+    const token = await user?.getIdToken(); // Get the Firebase token
+    let newData = {
+      propertyId,
+      userId
+    };
+
+    const response = await fetch('/api/listings/inspection', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(newData)
+    });
+
+    if (response.ok) {
+      toast({
+        variant: 'default',
+        title: 'Success',
+        description: 'Inspection requested'
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setOrigin(window.location.origin);
+    }
+  }, []);
+
+  const blinkUrl = `${origin}/api/action/${listingId}`;
+
   if (error) return <div>Failed to load</div>;
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="mt-32  overflow-clip rounded-md">
+    <div
+      id="property"
+      className="mb-20 mt-14  overflow-clip rounded-md lg:mt-28"
+    >
       <div className="grid w-full grid-cols-1 lg:grid-cols-[60%_40%]">
         <div className="">
           <Carousel responsive={{ desktop: 1, mobile: 1, tablet: 1 }}>
-            {data?.imageUrls.map((img, i) => (
-              <PhotoView key={i} src={img}>
-                <Image
-                  alt={'image'}
-                  width={400}
-                  height={200}
-                  src={`${img}`}
-                  priority
-                  className="object-fit z-0 h-full w-full object-center lg:object-cover"
-                />
-              </PhotoView>
-            ))}
+            {data &&
+              data?.imageUrls.map((img, i) => (
+                <PhotoView key={i} src={img}>
+                  <Image
+                    alt={'image'}
+                    width={400}
+                    height={200}
+                    src={`${img}`}
+                    priority
+                    className="object-fit z-0 h-full w-full object-center lg:object-cover"
+                  />
+                </PhotoView>
+              ))}
           </Carousel>
         </div>
         <div className="bg-gray-100 px-6 py-2 dark:bg-gray-300/5 ">
@@ -101,9 +147,19 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             </div>
           </div>
 
-          <Button size={`lg`} className="w-full text-white">
-            Request Inspection
-          </Button>
+          {!authuser ? (
+            <GoogleSignInButton />
+          ) : (
+            <Button
+              onClick={() =>
+                RequestInspection(user?.uid as string, data?.id as string)
+              }
+              size={`lg`}
+              className="w-full text-white"
+            >
+              Request Inspection
+            </Button>
+          )}
 
           <div className="mt-8">
             <div className="text-sm">Share blink</div>

@@ -1,14 +1,13 @@
 import Container from '@/components/container';
-import Hero from '@/components/hero';
+import Hero from '@/components/hero2';
 import Linstings from '@/components/listing';
-import TLSection from '@/components/t-l-section';
 
 const Home = () => {
   return (
     <Container>
       <div className="pt-10">
+        <Hero />
         <Linstings />
-        {/* <Hero /> */}
         {/* <TLSection /> */}
       </div>
     </Container>
