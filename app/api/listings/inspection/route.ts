@@ -1,5 +1,6 @@
 import { db, auth } from '@/lib/firebase/firebase-admin';
 import { createEventWithMeet } from '@/lib/googleapis';
+import { sendEmail } from '@/lib/mailer';
 import { Property, User } from '@/types';
 
 interface RequestInspection {
@@ -35,20 +36,23 @@ export async function POST(req: Request) {
     if (!propertyDoc.exists) {
       return Response.json({ message: 'property not found' }, { status: 404 });
     }
+    const userDoc = await db.collection('users').doc(decodedToken.uid).get();
+
+    if (!propertyDoc.exists) {
+      return Response.json({ message: 'user not found' }, { status: 404 });
+    }
+
+    const user = userDoc.data() as User;
 
     const property = propertyDoc.data() as Property;
 
-    await createEventWithMeet({
-      summary: `${property.title} inspection`,
-      description: 'Discuss project updates and next steps.',
-      startDateTime: '2024-09-30T09:00:00-07:00',
-      endDateTime: '2024-09-30T10:00:00-07:00',
-      timeZone: 'America/Los_Angeles',
-      attendees: [`${decodedToken.email}`, ``],
-      requestId: `${property.id}-${decodedToken.uid}`,
-      sendUpdates: 'all'
-    });
-
+    await sendEmail(
+      `${user?.email}`,
+      property.title,
+      user.name,
+      'today',
+      'https://meet.google.com/meeting'
+    );
     // Create the post in Firestore with an array of image URLs
     const docRef = await db.collection('inspections').add({
       user: {

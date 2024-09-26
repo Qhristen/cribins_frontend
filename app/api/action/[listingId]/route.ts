@@ -2,7 +2,11 @@
  * Solana Actions Example
  */
 
-import { DEFAULT_SOL_ADDRESS, DEFAULT_SOL_AMOUNT } from '@/lib/constant';
+import {
+  DEFAULT_SOL_ADDRESS,
+  DEFAULT_SOL_AMOUNT,
+  NETWORK
+} from '@/lib/constant';
 import { db } from '@/lib/firebase/firebase-admin';
 import { Property } from '@/types';
 import {
@@ -22,7 +26,10 @@ import {
 } from '@solana/web3.js';
 
 // create the standard headers for this route (including CORS)
-const headers = createActionHeaders();
+const headers = createActionHeaders({
+  chainId: NETWORK, // or chainId: "devnet"
+  actionVersion: '2.2.1' // the desired spec version
+});
 
 export const GET = async (
   req: Request,
@@ -38,7 +45,7 @@ export const GET = async (
     if (!doc.exists) {
       return Response.json({ message: 'Listing not found' }, { status: 404 });
     }
-    const property = doc.data() as Property;
+    const property = { id: doc.id, ...doc.data() } as Property;
 
     const baseHref = new URL(
       `/api/action/${property.id}?to=${toPubkey.toBase58()}`,
@@ -55,7 +62,27 @@ export const GET = async (
         actions: [
           {
             label: 'Request Inspection', // button text
-            href: `${baseHref}&amount=${property.price}`
+            href: `${baseHref}&amount=${property.price}&name={name}&email={email}&date={date}&propertyId=${property.id}`,
+            parameters: [
+              {
+                name: 'name',
+                type: 'text',
+                label: 'Your name here',
+                required: true
+              },
+              {
+                name: 'email',
+                type: 'email',
+                label: 'Your email address',
+                required: true
+              },
+              {
+                name: 'date',
+                type: 'datetime-local',
+                label: 'When will you be free?',
+                required: true
+              }
+            ]
           }
         ]
       }
@@ -84,7 +111,8 @@ export const OPTIONS = async (req: Request) => {
 export const POST = async (req: Request) => {
   try {
     const requestUrl = new URL(req.url);
-    const { amount, toPubkey } = validatedQueryParams(requestUrl);
+    const { amount, toPubkey, email, name, propertyId, date } =
+      validatedQueryParams(requestUrl);
 
     const body: ActionPostRequest = await req.json();
 
@@ -100,7 +128,7 @@ export const POST = async (req: Request) => {
     }
 
     const connection = new Connection(
-      process.env.SOLANA_RPC! || clusterApiUrl('mainnet-beta')
+      process.env.SOLANA_RPC! || clusterApiUrl(NETWORK)
     );
 
     // ensure the receiving account will be rent exempt
@@ -138,6 +166,14 @@ export const POST = async (req: Request) => {
       // signers: [],
     });
 
+    await db.collection('blink_inspections').add({
+      email,
+      name,
+      propertyId,
+      inspectionDate: date,
+      createdAt: new Date().toISOString()
+    });
+
     return Response.json(payload, {
       headers
     });
@@ -155,6 +191,7 @@ export const POST = async (req: Request) => {
 function validatedQueryParams(requestUrl: URL) {
   let toPubkey: PublicKey = DEFAULT_SOL_ADDRESS;
   let amount: number = DEFAULT_SOL_AMOUNT;
+  let name, propertyId, email, date;
 
   try {
     if (requestUrl.searchParams.get('to')) {
@@ -162,6 +199,35 @@ function validatedQueryParams(requestUrl: URL) {
     }
   } catch (err) {
     throw 'Invalid input query parameter: to';
+  }
+
+  try {
+    if (requestUrl.searchParams.get('name')) {
+      name = requestUrl.searchParams.get('name');
+    }
+  } catch (err) {
+    throw 'Invalid input query parameter: name';
+  }
+  try {
+    if (requestUrl.searchParams.get('propertyId')) {
+      propertyId = requestUrl.searchParams.get('propertyId');
+    }
+  } catch (err) {
+    throw 'Invalid input query parameter: propertyId';
+  }
+  try {
+    if (requestUrl.searchParams.get('email')) {
+      email = requestUrl.searchParams.get('email');
+    }
+  } catch (err) {
+    throw 'Invalid input query parameter: email';
+  }
+  try {
+    if (requestUrl.searchParams.get('date')) {
+      date = requestUrl.searchParams.get('date');
+    }
+  } catch (err) {
+    throw 'Invalid input query parameter: date';
   }
 
   try {
@@ -176,6 +242,10 @@ function validatedQueryParams(requestUrl: URL) {
 
   return {
     amount,
-    toPubkey
+    toPubkey,
+    name,
+    propertyId,
+    email,
+    date
   };
 }

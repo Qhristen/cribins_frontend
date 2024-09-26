@@ -25,9 +25,8 @@ const SingleListingClient = ({ listingId }: PageProps) => {
     listingId ? `/api/listings/${listingId}` : null,
     fetcher
   );
-
+  const user = auth.currentUser;
   const [origin, setOrigin] = useState('');
-
   const { user: authuser } = useAuth();
   const { toast } = useToast();
 
@@ -40,22 +39,26 @@ const SingleListingClient = ({ listingId }: PageProps) => {
     });
   };
 
-  console.log(data, 'pro');
-  const user = auth.currentUser;
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setOrigin(window.location.origin);
+    }
+  }, []);
 
-  const RequestInspection = async (userId: string, propertyId: string) => {
+  console.log(data);
+
+  const RequestInspection = async () => {
     const token = await user?.getIdToken(); // Get the Firebase token
     let newData = {
-      propertyId,
-      userId
+      propertyId: data?.id
     };
 
     const response = await fetch('/api/listings/inspection', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
+      credentials: 'same-origin',
       body: JSON.stringify(newData)
     });
 
@@ -67,12 +70,6 @@ const SingleListingClient = ({ listingId }: PageProps) => {
       });
     }
   };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setOrigin(window.location.origin);
-    }
-  }, []);
 
   const blinkUrl = `${origin}/api/action/${listingId}`;
 
@@ -151,9 +148,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             <GoogleSignInButton />
           ) : (
             <Button
-              onClick={() =>
-                RequestInspection(user?.uid as string, data?.id as string)
-              }
+              onClick={() => RequestInspection()}
               size={`lg`}
               className="w-full text-white"
             >

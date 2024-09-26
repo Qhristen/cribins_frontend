@@ -14,7 +14,7 @@ export async function GET(
       return Response.json({ message: 'Listing not found' }, { status: 404 });
     }
 
-    return Response.json(doc.data(), { status: 200 });
+    return Response.json({ id: doc.id, ...doc.data() }, { status: 200 });
   } catch (error) {
     return Response.json(
       { message: 'Error fetching data', error },

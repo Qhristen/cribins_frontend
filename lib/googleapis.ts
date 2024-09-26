@@ -2,12 +2,18 @@ import { google, calendar_v3 } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 
 // Replace with your OAuth 2.0 credentials
-const oAuth2Client = new OAuth2Client(
+const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET
 );
 
-const calendar = google.calendar({ version: 'v3', auth: oAuth2Client });
+// Set the credentials (access token and refresh token)
+oauth2Client.setCredentials({
+  access_token: 'YOUR_ACCESS_TOKEN',
+  refresh_token: 'YOUR_REFRESH_TOKEN'
+});
+
+const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
 // Type definition for event parameters
 interface EventParams {

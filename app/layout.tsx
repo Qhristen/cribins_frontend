@@ -25,6 +25,30 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <meta property="og:url" content="https://cribins.com" />
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content="Cribins" />
+      <meta
+        property="og:description"
+        content="Find your dream home with our comprehensive real estate platform. Browse listings, view photos, and connect with trusted agents. Your next property awaits!"
+      />
+      <meta
+        property="og:image"
+        content="https://cribins.com/adaptive-icon.png"
+      />
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta property="twitter:domain" content="cribins.com" />
+      <meta property="twitter:url" content="https://x.com/officialcribins" />
+      <meta name="twitter:title" content="Cribins" />
+      <meta
+        name="twitter:description"
+        content="Find your dream home with our comprehensive real estate platform. Browse listings, view photos, and connect with trusted agents. Your next property awaits!"
+      />
+      <meta
+        name="twitter:image"
+        content="https://cribins.com/adaptive-icon.png"
+      />
       <body className={`${plus_Jakarta_Sans.className}`}>
         <NextTopLoader showSpinner={false} />
         <Providers>

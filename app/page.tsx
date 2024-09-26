@@ -4,13 +4,11 @@ import Linstings from '@/components/listing';
 
 const Home = () => {
   return (
-    <Container>
-      <div className="pt-10">
-        <Hero />
-        <Linstings />
-        {/* <TLSection /> */}
-      </div>
-    </Container>
+    <div className="">
+      <Hero />
+      <Linstings />
+      {/* <TLSection /> */}
+    </div>
   );
 };
 
