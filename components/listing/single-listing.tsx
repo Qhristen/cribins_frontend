@@ -129,11 +129,13 @@ const SingleListingClient = ({ listingId }: PageProps) => {
           </Carousel>
         </div>
         <div className="bg-gray-100 px-6 py-2 dark:bg-gray-300/5 ">
-          <h1 className="py-3 text-3xl font-extrabold">{data?.title}</h1>
+          <h1 className="py-3 text-3xl font-extrabold capitalize">
+            {data?.title}
+          </h1>
           <div className="flex flex-row items-center justify-start gap-2 pb-2">
             <CiLocationOn color={'gray'} size={22} />
             <div className="font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40">
-              123 Elmwood Avenue, CA 93927, Lagos, Nigeria
+              {data?.location}
             </div>
           </div>
 
@@ -177,6 +179,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             <GoogleSignInButton />
           ) : (
             <>
+              <h2 className="pt-10 font-bold">Schedule Virtual Inspection</h2>
               <DateTimePicker
                 label="Select Date & Time"
                 onDateChange={handleDateChange}

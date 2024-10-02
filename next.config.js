@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['utfs.io', 'plus.unsplash.com', 'images.unsplash.com']
+    domains: [
+      'utfs.io',
+      'plus.unsplash.com',
+      'images.unsplash.com',
+      'krentdevstorage.blob.core.windows.net'
+    ]
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if

@@ -21,7 +21,9 @@ export default function LinstingCard({ property }: Props) {
         className="object-fit z-0 h-full w-full object-center lg:object-cover"
       />
       <div className="absolute bottom-0 left-0 right-0 flex h-16 items-center justify-start bg-gradient-to-t from-black via-black/85 to-transparent p-3">
-        <h1 className="text-xl font-bold text-white">{property.title}</h1>
+        <h1 className="text-xl font-bold capitalize text-white">
+          {property.title}
+        </h1>
       </div>
     </Card>
   );

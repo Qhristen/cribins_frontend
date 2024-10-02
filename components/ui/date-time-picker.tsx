@@ -23,7 +23,7 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({
 
   return (
     <div className="my-4 mt-6 w-full">
-      <label className="mb-2 block text-sm font-medium text-gray-700">
+      <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-white">
         {label}
       </label>
       <div className="relative">
