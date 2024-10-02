@@ -18,7 +18,7 @@ export default function Linstings() {
 
   return (
     <Container>
-      <div id="property" className="h-screen pt-10">
+      <div id="property" className="h-screen pt-14">
         {/* <ListingFilter /> */}
 
         <h4 className="text-3xl font-bold text-primary">Recent Property</h4>

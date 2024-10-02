@@ -1,20 +1,23 @@
 'use client';
 
+import { useAuth } from '@/context/auth-context';
 import fetcher from '@/lib/fetcher';
+import { auth } from '@/lib/firebase/firebase';
 import { Property } from '@/types';
 import { Check } from 'lucide-react';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
 import { GoCopy } from 'react-icons/go';
 import { PhotoView } from 'react-photo-view';
 import useSWR from 'swr';
+import GoogleSignInButton from '../google-auth-button';
 import { Button } from '../ui/button';
 import Carousel from '../ui/carousel';
+import DateTimePicker from '../ui/date-time-picker';
 import { useToast } from '../ui/use-toast';
-import { auth } from '@/lib/firebase/firebase';
-import { useAuth } from '@/context/auth-context';
-import GoogleSignInButton from '../google-auth-button';
-import { useEffect, useState } from 'react';
+import { SolanaQRCode } from '../qr-code';
+import { useTheme } from 'next-themes';
 
 interface PageProps {
   listingId: string;
@@ -29,6 +32,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
   const [origin, setOrigin] = useState('');
   const { user: authuser } = useAuth();
   const { toast } = useToast();
+  const { theme } = useTheme();
 
   const onCopy = () => {
     navigator.clipboard.writeText(blinkUrl);
@@ -39,13 +43,17 @@ const SingleListingClient = ({ listingId }: PageProps) => {
     });
   };
 
+  const [dateTime, setDateTime] = useState('');
+
+  const handleDateChange = (date: string) => {
+    setDateTime(date);
+  };
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setOrigin(window.location.origin);
     }
   }, []);
-
-  console.log(data);
 
   const RequestInspection = async () => {
     const token = await user?.getIdToken(); // Get the Firebase token
@@ -62,6 +70,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
       body: JSON.stringify(newData)
     });
 
+    console.log(await response.json(), 'res');
     if (response.ok) {
       toast({
         variant: 'default',
@@ -71,17 +80,16 @@ const SingleListingClient = ({ listingId }: PageProps) => {
     }
   };
 
+  console.log(dateTime, 'date');
+
   const blinkUrl = `${origin}/api/action/${listingId}`;
 
   if (error) return <div>Failed to load</div>;
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div
-      id="property"
-      className="mb-20 mt-14  overflow-clip rounded-md lg:mt-28"
-    >
-      <div className="grid w-full grid-cols-1 lg:grid-cols-[60%_40%]">
+    <div id="property" className="mb-20 mt-14 lg:overflow-clip">
+      <div className="grid h-screen w-full grid-cols-1 lg:grid-cols-[60%_40%]">
         <div className="">
           <Carousel responsive={{ desktop: 1, mobile: 1, tablet: 1 }}>
             {data &&
@@ -108,9 +116,9 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             </div>
           </div>
 
-          <div className="border-secondary-200 dark:border-secondary-700/30 mt-2 flex flex-row items-center justify-between rounded-md border p-2 px-4">
+          {/* <div className="border-secondary-200 dark:border-secondary-700/30 mt-2 flex flex-row items-center justify-between rounded-md border p-2 px-4">
             <div className="flex flex-col items-center justify-center">
-              <div className="dark:text-white/50"> Price</div>
+              <div className="dark:text-white/50"> Amount</div>
               <div className="text-sm font-bold dark:text-white">
                 {data?.price}SOL
               </div>
@@ -122,7 +130,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center">
-              <div className="dark:text-white/50"> Status</div>
+              <div className="dark:text-white/50"> For</div>
               <div className="text-sm font-bold dark:text-white">
                 {data?.propertyStatus}
               </div>
@@ -133,9 +141,9 @@ const SingleListingClient = ({ listingId }: PageProps) => {
                 <Check name="check" color={'green'} size={13} />
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="mt-2 py-2 pb-10">
+          <div className="mt-2 py-2">
             <div className="pb-2 font-bold dark:text-white/60">
               Description.
             </div>
@@ -147,6 +155,50 @@ const SingleListingClient = ({ listingId }: PageProps) => {
           {!authuser ? (
             <GoogleSignInButton />
           ) : (
+            <>
+              <DateTimePicker
+                label="Select Date & Time"
+                onDateChange={handleDateChange}
+              />
+              <div className="flex flex-row-reverse items-center gap-2">
+                <div>
+                  <div className="mb-5 font-bold">
+                    Scan QR code <br /> to make payment
+                  </div>
+
+                  <div>
+                    <div className="text-sm">Share blink</div>
+                    <div className="flex items-center gap-2 text-xs text-primary">
+                      {`${blinkUrl.slice(0, 10)}...`}
+                      <GoCopy
+                        onClick={onCopy}
+                        size={20}
+                        className=" cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <SolanaQRCode
+                  size={300}
+                  color={theme === 'light' ? 'black' : 'white'}
+                  background={'black'}
+                  className="aspect-square rounded-lg [&>svg]:scale-75 md:[&>svg]:scale-100"
+                  url={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}&date=${dateTime} -`}
+                />
+
+                <div className="text-3xl font-bold dark:text-white">
+                  {data?.price} <br />
+                  SOL
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* 
+          {!authuser ? (
+            <GoogleSignInButton />
+          ) : (
             <Button
               onClick={() => RequestInspection()}
               size={`lg`}
@@ -154,15 +206,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             >
               Request Inspection
             </Button>
-          )}
-
-          <div className="mt-8">
-            <div className="text-sm">Share blink</div>
-            <div className="flex items-center gap-2 text-xs text-primary">
-              {blinkUrl}
-              <GoCopy onClick={onCopy} size={20} className=" cursor-pointer" />
-            </div>
-          </div>
+          )} */}
         </div>
       </div>
     </div>

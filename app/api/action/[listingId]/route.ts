@@ -8,6 +8,7 @@ import {
   NETWORK
 } from '@/lib/constant';
 import { db } from '@/lib/firebase/firebase-admin';
+import { sendEmail } from '@/lib/mailer';
 import { Property } from '@/types';
 import {
   ActionPostResponse,
@@ -127,6 +128,17 @@ export const POST = async (req: Request) => {
       });
     }
 
+    const propertyDoc = await db
+      .collection('listings')
+      .doc(propertyId as string)
+      .get();
+
+    if (!propertyDoc.exists) {
+      return Response.json({ message: 'property not found' }, { status: 404 });
+    }
+
+    const property = propertyDoc.data() as Property;
+
     const connection = new Connection(
       process.env.SOLANA_RPC! || clusterApiUrl(NETWORK)
     );
@@ -165,6 +177,15 @@ export const POST = async (req: Request) => {
       // note: no additional signers are needed
       // signers: [],
     });
+
+    await sendEmail(
+      `${email}`,
+      property.title,
+      name as string,
+      date as string,
+      'https://meet.google.com/meeting'
+    );
+    // Create the post in Firestore with an array of image URLs
 
     await db.collection('blink_inspections').add({
       email,

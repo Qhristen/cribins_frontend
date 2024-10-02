@@ -15,21 +15,19 @@ export default function Header() {
   const { user } = useAuth();
 
   return (
-    <div className="fixed left-0 right-0 top-0 z-20 ">
-      <Container>
-        <nav className="flex h-14 items-center justify-between">
-          <div className="">
-            <Link href={`/`} className="text-2xl font-medium tracking-widest">
-              <Image src={CribinsLogo} className="h-10 w-10" alt="logo_dark" />
-              {/* Cribins */}
-            </Link>
-          </div>
-          <div className="flex items-center gap-2">
-            {user ? <UserNav user={user} /> : <GoogleSignInButton />}
-            <ThemeToggle />
-          </div>
-        </nav>
-      </Container>
+    <div className="fixed left-0 right-0 top-0 z-20 bg-white px-4 dark:bg-black">
+      <nav className="flex h-14 items-center justify-between">
+        <div className="">
+          <Link href={`/`} className="text-2xl font-medium tracking-widest">
+            <Image src={CribinsLogo} className="h-10 w-10" alt="logo_dark" />
+            {/* Cribins */}
+          </Link>
+        </div>
+        <div className="flex items-center gap-2">
+          {user ? <UserNav user={user} /> : <GoogleSignInButton />}
+          <ThemeToggle />
+        </div>
+      </nav>
     </div>
   );
 }

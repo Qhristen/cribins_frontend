@@ -7,11 +7,7 @@ interface PageProps {
   };
 }
 const SingleListing = ({ params }: PageProps) => {
-  return (
-    <Container>
-      <SingleListingClient listingId={params.listingId} />
-    </Container>
-  );
+  return <SingleListingClient listingId={params.listingId} />;
 };
 
 export default SingleListing;
