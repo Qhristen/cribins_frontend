@@ -6,6 +6,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import LinstingCard from './listing-card';
 import Container from '../container';
+import SkeletonCard from '../skeleton-card';
 
 export default function Linstings() {
   const { data, error, isLoading } = useSWR<Property[]>(
@@ -13,12 +14,20 @@ export default function Linstings() {
     fetcher
   );
 
-  if (error) return <div>Failed to load</div>;
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || error)
+    return (
+      <Container>
+        <div className="grid gap-2 py-5 md:grid-cols-3">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </Container>
+    );
 
   return (
     <Container>
-      <div id="property" className="h-screen pt-14">
+      <div id="property" className="h-screen">
         {/* <ListingFilter /> */}
 
         <h4 className="text-3xl font-bold text-primary">Recent Property</h4>

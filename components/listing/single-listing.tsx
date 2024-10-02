@@ -18,6 +18,9 @@ import DateTimePicker from '../ui/date-time-picker';
 import { useToast } from '../ui/use-toast';
 import { SolanaQRCode } from '../qr-code';
 import { useTheme } from 'next-themes';
+import SkeletonCard from '../skeleton-card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Skeleton } from '../ui/skeleton';
 
 interface PageProps {
   listingId: string;
@@ -84,8 +87,26 @@ const SingleListingClient = ({ listingId }: PageProps) => {
 
   const blinkUrl = `${origin}/api/action/${listingId}`;
 
-  if (error) return <div>Failed to load</div>;
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading || error)
+    return (
+      <div className="mt-14 grid h-screen w-full grid-cols-1 lg:grid-cols-[60%_40%]">
+        <Card className="h-screen rounded-none border-none">
+          <Skeleton className="h-screen w-full" />
+        </Card>
+        <Card className="rounded-none border-none">
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-6 w-1/5" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex h-auto flex-wrap gap-2 lg:flex-nowrap">
+            <Skeleton className="h-6 w-1/5" />
+            <Skeleton className="h-6 w-1/5" />
+            <Skeleton className="h-6 w-1/5" />
+          </CardContent>
+        </Card>
+      </div>
+    );
 
   return (
     <div id="property" className="mb-20 mt-14 lg:overflow-clip">
