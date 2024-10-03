@@ -3,7 +3,9 @@ import nodemailer from 'nodemailer';
 export const createTransporter = () => {
   // Create and return a reusable transporter object using the default SMTP transport
   return nodemailer.createTransport({
-    service: 'gmail', // Use your email provider or SMTP details
+    host: 'sandbox.smtp.mailtrap.io',
+    // service: 'sandbox.smtp.mailtrap.io', // Use your email provider or SMTP details
+    port: 2525,
     auth: {
       user: process.env.EMAIL_USER, // Environment variable for the email
       pass: process.env.EMAIL_PASSWORD // Environment variable for the password
@@ -25,7 +27,7 @@ export const sendEmail = async (
     from: `support@cribins.com`, // Sender email
     to, // Recipient email
     subject: `${propertyName} Inspection`, // Email subject
-    html: `
+    html: `sandbox.smtp.mailtrap.io
     <div className="bg-gray-50 p-6 font-sans text-gray-800">
     <div className="bg-blue-600 text-white p-4 text-center rounded-t-lg">
       <h1 className="text-2xl font-bold">${propertyName} Inspection</h1>

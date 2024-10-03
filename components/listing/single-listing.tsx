@@ -4,7 +4,7 @@ import { useAuth } from '@/context/auth-context';
 import fetcher from '@/lib/fetcher';
 import { auth } from '@/lib/firebase/firebase';
 import { Property } from '@/types';
-import { Check } from 'lucide-react';
+import { Check, DollarSign } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { CiLocationOn } from 'react-icons/ci';
@@ -21,6 +21,8 @@ import { useTheme } from 'next-themes';
 import SkeletonCard from '../skeleton-card';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Skeleton } from '../ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import BlinkComponent from '../blink';
 
 interface PageProps {
   listingId: string;
@@ -109,7 +111,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
     );
 
   return (
-    <div id="property" className="mb-20 mt-14 lg:overflow-clip">
+    <div id="property" className="mb-20 mt-14">
       <div className="grid h-screen w-full grid-cols-1 lg:grid-cols-[60%_40%]">
         <div className="">
           <Carousel responsive={{ desktop: 1, mobile: 1, tablet: 1 }}>
@@ -132,10 +134,19 @@ const SingleListingClient = ({ listingId }: PageProps) => {
           <h1 className="py-3 text-3xl font-extrabold capitalize">
             {data?.title}
           </h1>
-          <div className="flex flex-row items-center justify-start gap-2 pb-2">
-            <CiLocationOn color={'gray'} size={22} />
-            <div className="font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40">
-              {data?.location}
+          <div className="flex items-center gap-2">
+            <div className="flex flex-row items-center justify-start gap-2 pb-2">
+              <CiLocationOn color={'gray'} size={22} />
+              <div className="font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40">
+                {data?.location}
+              </div>
+            </div>
+
+            <div className="flex flex-row items-center justify-start gap-2 pb-2">
+              <DollarSign color={'gray'} size={22} />
+              <div className="font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40">
+                {data?.price}
+              </div>
             </div>
           </div>
 
@@ -179,43 +190,44 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             <GoogleSignInButton />
           ) : (
             <>
-              <h2 className="pt-10 font-bold">Schedule Virtual Inspection</h2>
-              <DateTimePicker
-                label="Select Date & Time"
-                onDateChange={handleDateChange}
-              />
-              <div className="flex flex-row-reverse items-center gap-2">
-                <div>
-                  <div className="mb-5 font-bold">
-                    Scan QR code <br /> to make payment
-                  </div>
-
-                  <div>
-                    <div className="text-sm">Share blink</div>
-                    <div className="flex items-center gap-2 text-xs text-primary">
-                      {`${blinkUrl.slice(0, 10)}...`}
-                      <GoCopy
-                        onClick={onCopy}
-                        size={20}
-                        className=" cursor-pointer"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <SolanaQRCode
-                  size={300}
-                  color={theme === 'light' ? 'black' : 'white'}
-                  background={'black'}
-                  className="aspect-square rounded-lg [&>svg]:scale-75 md:[&>svg]:scale-100"
-                  url={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}&date=${dateTime} -`}
-                />
-
-                <div className="text-3xl font-bold dark:text-white">
-                  {data?.price} <br />
-                  SOL
-                </div>
-              </div>
+              <Tabs defaultValue="send" className="mt-5">
+                <TabsList className="flex items-center justify-center">
+                  <TabsTrigger className="px-5 lg:px-10" value="send">
+                    Blink
+                  </TabsTrigger>
+                  <TabsTrigger className="px-5 lg:px-10" value="qr">
+                    Scan QR
+                  </TabsTrigger>
+                  <Button
+                    onClick={onCopy}
+                    variant={`ghost`}
+                    className="px-5 lg:px-10"
+                  >
+                    Share blink
+                    <GoCopy size={20} className=" ml-2 cursor-pointer" />
+                  </Button>
+                </TabsList>
+                <TabsContent
+                  value="send"
+                  className="flex items-center justify-center"
+                >
+                  <BlinkComponent
+                    actionApiUrl={`${blinkUrl}`}
+                    // actionApiUrl={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}`}
+                  />
+                </TabsContent>
+                <TabsContent
+                  value="qr"
+                  className="flex items-center justify-center"
+                >
+                  <SolanaQRCode
+                    size={300}
+                    background={'white'}
+                    className="aspect-square rounded-lg [&>svg]:scale-75 md:[&>svg]:scale-100"
+                    url={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}&date=${dateTime}`}
+                  />
+                </TabsContent>
+              </Tabs>
             </>
           )}
 
@@ -233,6 +245,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
           )} */}
         </div>
       </div>
+      {/* <div>hsvghs</div> */}
     </div>
   );
 };

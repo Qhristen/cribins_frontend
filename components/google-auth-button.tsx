@@ -9,7 +9,7 @@ export default function GoogleSignInButton() {
 
   return (
     <Button
-      className="w-full"
+      className="my-2 w-full"
       variant="outline"
       type="button"
       onClick={async () => {

@@ -5,6 +5,7 @@ import { Blink, useAction } from '@dialectlabs/blinks';
 import { useActionSolanaWalletAdapter } from '@dialectlabs/blinks/hooks/solana';
 import { useState } from 'react';
 import { NETWORK } from '@/lib/constant';
+import SkeletonCard from './skeleton-card';
 
 interface Props {
   actionApiUrl: string;
@@ -25,7 +26,9 @@ const BlinkComponent = ({ actionApiUrl }: Props) => {
           action={action}
           websiteText={new URL(actionApiUrl).hostname}
         />
-      ) : null}
+      ) : (
+        <SkeletonCard />
+      )}
     </div>
   );
 };
