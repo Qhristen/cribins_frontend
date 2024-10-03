@@ -62,6 +62,7 @@ export const GET = async (
       links: {
         actions: [
           {
+            type: 'post',
             label: 'Request Inspection', // button text
             href: `${baseHref}&amount=${property.price}&name={name}&email={email}&date={date}&propertyId=${property.id}`,
             parameters: [
@@ -172,6 +173,7 @@ export const POST = async (req: Request) => {
     const payload: ActionPostResponse = await createPostResponse({
       fields: {
         transaction,
+        type: 'transaction',
         message: `Send ${amount} SOL to ${toPubkey.toBase58()}`
       }
       // note: no additional signers are needed
