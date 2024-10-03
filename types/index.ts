@@ -10,6 +10,28 @@ export interface NavItem {
   description?: string;
 }
 
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  photoURL: string;
+  createdAt: Date;
+};
+
+export interface Property {
+  id: string;
+  title: string;
+  description: string;
+  address: string;
+  price: number;
+  propertyType: string;
+  propertyStatus: string;
+  imageUrls: string[];
+  location: string;
+  owner: User;
+  createdAt: string;
+}
+
 export interface NavItemWithChildren extends NavItem {
   items: NavItemWithChildren[];
 }
