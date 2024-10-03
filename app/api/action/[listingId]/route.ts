@@ -62,7 +62,7 @@ export const GET = async (
       links: {
         actions: [
           {
-            type: 'post',
+            type: 'transaction',
             label: 'Request Inspection', // button text
             href: `${baseHref}&amount=${property.price}&name={name}&email={email}&date={date}&propertyId=${property.id}`,
             parameters: [
