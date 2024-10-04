@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useMemo } from 'react';
 import {
   ConnectionProvider,
   WalletProvider
 } from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
+import React, { useMemo } from 'react';
 // import { UnsafeBurnerWalletAdapter } from "@solana/wallet-adapter-wallets";
 
 // Default styles that can be overridden by your app
+import { NETWORK } from '@/lib/constant';
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 // imports here
@@ -20,14 +20,13 @@ export default function AppWalletProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const network = WalletAdapterNetwork.Mainnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const endpoint = useMemo(() => clusterApiUrl(NETWORK), [NETWORK]);
   const wallets = useMemo(
     () => [
       // manually add any legacy wallet adapters here
       // new UnsafeBurnerWalletAdapter(),
     ],
-    [network]
+    [NETWORK]
   );
 
   return (
