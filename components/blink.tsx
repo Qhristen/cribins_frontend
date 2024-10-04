@@ -6,6 +6,7 @@ import { useActionSolanaWalletAdapter } from '@dialectlabs/blinks/hooks/solana';
 import { useState } from 'react';
 import { NETWORK } from '@/lib/constant';
 import SkeletonCard from './skeleton-card';
+import { useTheme } from 'next-themes';
 
 interface Props {
   actionApiUrl: string;
@@ -17,14 +18,16 @@ const BlinkComponent = ({ actionApiUrl }: Props) => {
     'https://api.devnet.solana.com'
   );
   const { action } = useAction({ url: actionApiUrl, adapter });
+  const { theme } = useTheme();
 
   return (
     <div className="h-10 w-full p-4">
       {action ? (
         <Blink
-          stylePreset="x-dark"
+          stylePreset={theme === 'dark' ? 'x-dark' : 'x-light'}
           action={action}
           websiteText={new URL(actionApiUrl).hostname}
+          securityLevel={'all'}
         />
       ) : (
         <SkeletonCard />

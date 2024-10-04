@@ -5,7 +5,7 @@ export const createTransporter = () => {
   return nodemailer.createTransport({
     host: 'sandbox.smtp.mailtrap.io',
     // service: 'sandbox.smtp.mailtrap.io', // Use your email provider or SMTP details
-    port: 2525,
+    port: 587,
     auth: {
       user: process.env.EMAIL_USER, // Environment variable for the email
       pass: process.env.EMAIL_PASSWORD // Environment variable for the password

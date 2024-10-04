@@ -44,7 +44,7 @@ export const GET = async (
     const doc = await db.collection('listings').doc(id).get();
 
     if (!doc.exists) {
-      return Response.json({ message: 'Listing not found' }, { status: 404 });
+      return Response.json({ message: 'Listing not found' }, headers);
     }
     const property = { id: doc.id, ...doc.data() } as Property;
 
@@ -55,7 +55,7 @@ export const GET = async (
 
     const payload: ActionGetResponse = {
       type: 'action',
-      title: `${property.title}`,
+      title: `${property.title} - ${property.price} SOL`,
       icon: `${property && property.imageUrls[0]}`,
       description: `${property.description}`,
       label: 'Request inspection', // this value will be ignored since `links.actions` exists
@@ -81,7 +81,7 @@ export const GET = async (
               {
                 name: 'date',
                 type: 'datetime-local',
-                label: 'When will you be free?',
+                label: 'When will you be free for inspection?',
                 required: true
               }
             ]
@@ -135,7 +135,7 @@ export const POST = async (req: Request) => {
       .get();
 
     if (!propertyDoc.exists) {
-      return Response.json({ message: 'property not found' }, { status: 404 });
+      return Response.json({ message: 'property not found' }, headers);
     }
 
     const property = propertyDoc.data() as Property;

@@ -35,7 +35,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
   );
   const user = auth.currentUser;
   const [origin, setOrigin] = useState('');
-  const { user: authuser } = useAuth();
+  // const { user: authuser } = useAuth();
   const { toast } = useToast();
   const { theme } = useTheme();
 
@@ -85,8 +85,6 @@ const SingleListingClient = ({ listingId }: PageProps) => {
     }
   };
 
-  console.log(dateTime, 'date');
-
   const blinkUrl = `${origin}/api/action/${listingId}`;
 
   if (isLoading || error)
@@ -131,7 +129,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
           </Carousel>
         </div>
         <div className="bg-gray-100 px-6 py-2 dark:bg-gray-300/5 ">
-          <h1 className="py-3 text-3xl font-extrabold capitalize">
+          {/* <h1 className="py-3 text-3xl font-extrabold capitalize">
             {data?.title}
           </h1>
           <div className="flex items-center gap-2">
@@ -143,16 +141,16 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             </div>
 
             <div className="flex flex-row items-center justify-start gap-2 pb-2">
-              <DollarSign color={'gray'} size={22} />
+              <span className='font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40'>SOL</span>
               <div className="font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40">
                 {data?.price}
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* <div className="border-secondary-200 dark:border-secondary-700/30 mt-2 flex flex-row items-center justify-between rounded-md border p-2 px-4">
             <div className="flex flex-col items-center justify-center">
-              <div className="dark:text-white/50"> Amount</div>
+              <div className="datrk:text-white/50"> Amount</div>
               <div className="text-sm font-bold dark:text-white">
                 {data?.price}SOL
               </div>
@@ -177,59 +175,54 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             </div>
           </div> */}
 
-          <div className="mt-2 py-2">
+          {/* <div className="mt-2 py-2">
             <div className="pb-2 font-bold dark:text-white/60">
               Description.
             </div>
             <div className="text-sm leading-6 text-gray-700 dark:text-white/40">
               {data?.description}
             </div>
-          </div>
+          </div> */}
 
-          {!authuser ? (
-            <GoogleSignInButton />
-          ) : (
-            <>
-              <Tabs defaultValue="send" className="mt-5">
-                <TabsList className="flex items-center justify-center">
-                  <TabsTrigger className="px-5 lg:px-10" value="send">
-                    Blink
-                  </TabsTrigger>
-                  <TabsTrigger className="px-5 lg:px-10" value="qr">
+          <Tabs defaultValue="send" className="mt-5">
+            <TabsList className="flex items-center justify-center">
+              <TabsTrigger className="px-5 lg:px-10" value="send">
+                Blink
+              </TabsTrigger>
+              {/* <TabsTrigger className="px-5 lg:px-10" value="qr">
                     Scan QR
-                  </TabsTrigger>
-                  <Button
-                    onClick={onCopy}
-                    variant={`ghost`}
-                    className="px-5 lg:px-10"
-                  >
-                    Share blink
-                    <GoCopy size={20} className=" ml-2 cursor-pointer" />
-                  </Button>
-                </TabsList>
-                <TabsContent
-                  value="send"
-                  className="flex items-center justify-center"
-                >
-                  <BlinkComponent
-                    actionApiUrl={`${blinkUrl}`}
-                    // actionApiUrl={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}`}
-                  />
-                </TabsContent>
-                <TabsContent
+                  </TabsTrigger> */}
+              <Button
+                onClick={onCopy}
+                variant={`ghost`}
+                className="px-5 lg:px-10"
+              >
+                Share blink
+                <GoCopy size={20} className=" ml-2 cursor-pointer" />
+              </Button>
+            </TabsList>
+            <TabsContent
+              value="send"
+              className="flex items-center justify-center"
+            >
+              <BlinkComponent
+                actionApiUrl={`${blinkUrl}`}
+                // actionApiUrl={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}`}
+              />
+            </TabsContent>
+            {/* <TabsContent
                   value="qr"
-                  className="flex items-center justify-center"
+                  className="flex flex-col items-center justify-center"
                 >
+                  <DateTimePicker label='Select inspection date' onDateChange={handleDateChange} />
                   <SolanaQRCode
                     size={300}
                     background={'white'}
                     className="aspect-square rounded-lg [&>svg]:scale-75 md:[&>svg]:scale-100"
                     url={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}&date=${dateTime}`}
                   />
-                </TabsContent>
-              </Tabs>
-            </>
-          )}
+                </TabsContent> */}
+          </Tabs>
 
           {/* 
           {!authuser ? (
