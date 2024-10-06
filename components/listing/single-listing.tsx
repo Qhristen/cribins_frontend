@@ -23,6 +23,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Skeleton } from '../ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import BlinkComponent from '../blink';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import {
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  sendAndConfirmTransaction,
+  SystemProgram,
+  Transaction
+} from '@solana/web3.js';
+import { DEFAULT_SOL_ADDRESS } from '@/lib/constant';
+import { Input } from '../ui/input';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 interface PageProps {
   listingId: string;
@@ -35,9 +46,13 @@ const SingleListingClient = ({ listingId }: PageProps) => {
   );
   const user = auth.currentUser;
   const [origin, setOrigin] = useState('');
-  // const { user: authuser } = useAuth();
+  const { user: authuser } = useAuth();
   const { toast } = useToast();
   const { theme } = useTheme();
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction } = useWallet();
+  const [isTransactionLoading, setIsTransactionLoading] =
+    useState<boolean>(false);
 
   const onCopy = () => {
     navigator.clipboard.writeText(blinkUrl);
@@ -50,10 +65,6 @@ const SingleListingClient = ({ listingId }: PageProps) => {
 
   const [dateTime, setDateTime] = useState('');
 
-  const handleDateChange = (date: string) => {
-    setDateTime(date);
-  };
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setOrigin(window.location.origin);
@@ -61,29 +72,69 @@ const SingleListingClient = ({ listingId }: PageProps) => {
   }, []);
 
   const RequestInspection = async () => {
-    const token = await user?.getIdToken(); // Get the Firebase token
-    let newData = {
-      propertyId: data?.id
-    };
-
-    const response = await fetch('/api/listings/inspection', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      credentials: 'same-origin',
-      body: JSON.stringify(newData)
-    });
-
-    console.log(await response.json(), 'res');
-    if (response.ok) {
+    if (!publicKey) {
       toast({
-        variant: 'default',
-        title: 'Success',
-        description: 'Inspection requested'
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Wallet not connected.'
       });
+      return;
+    }
+    setIsTransactionLoading(true); // Set loading state to true
+
+    try {
+      const recipientPublicKey = new PublicKey(DEFAULT_SOL_ADDRESS);
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: recipientPublicKey,
+          lamports: (data?.price as number) * LAMPORTS_PER_SOL // Convert amount in SOL to lamports
+        })
+      );
+
+      const signature = await sendTransaction(transaction, connection);
+      const latestBlockhash = await connection.getLatestBlockhash();
+      await connection.confirmTransaction(
+        {
+          signature,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight
+        },
+        'processed'
+      );
+      const token = await user?.getIdToken();
+      let newData = {
+        propertyId: data?.id,
+        inspectionDate: dateTime
+      };
+      const response = await fetch('/api/listings/inspection', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify(newData)
+      });
+
+      if (response.ok) {
+        toast({
+          variant: 'default',
+          title: 'Success',
+          description: `Inspection requested and Transaction successful: ${signature}`
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: `Transaction failed: ${error}`
+      });
+    } finally {
+      setIsTransactionLoading(false); // Set loading state to false after transaction is processed
     }
   };
+
+  console.log(dateTime, 'setDateTime');
 
   const blinkUrl = `${origin}/api/action/${listingId}`;
 
@@ -110,7 +161,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
 
   return (
     <div id="property" className="mb-20 mt-14">
-      <div className="grid h-screen w-full grid-cols-1 lg:grid-cols-[60%_40%]">
+      <div className="grid h-80 w-full grid-cols-1 lg:grid-cols-[60%_40%]">
         <div className="">
           <Carousel responsive={{ desktop: 1, mobile: 1, tablet: 1 }}>
             {data &&
@@ -129,7 +180,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
           </Carousel>
         </div>
         <div className="bg-gray-100 px-6 py-2 dark:bg-gray-300/5 ">
-          {/* <h1 className="py-3 text-3xl font-extrabold capitalize">
+          <h1 className="py-3 text-3xl font-extrabold capitalize">
             {data?.title}
           </h1>
           <div className="flex items-center gap-2">
@@ -141,12 +192,14 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             </div>
 
             <div className="flex flex-row items-center justify-start gap-2 pb-2">
-              <span className='font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40'>SOL</span>
+              <span className="font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40">
+                SOL
+              </span>
               <div className="font-JakartaMedium text-wrap text-sm text-gray-600 dark:text-white/40">
                 {data?.price}
               </div>
             </div>
-          </div> */}
+          </div>
 
           {/* <div className="border-secondary-200 dark:border-secondary-700/30 mt-2 flex flex-row items-center justify-between rounded-md border p-2 px-4">
             <div className="flex flex-col items-center justify-center">
@@ -175,23 +228,23 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             </div>
           </div> */}
 
-          {/* <div className="mt-2 py-2">
+          <div className="mt-2 py-2">
             <div className="pb-2 font-bold dark:text-white/60">
               Description.
             </div>
             <div className="text-sm leading-6 text-gray-700 dark:text-white/40">
               {data?.description}
             </div>
-          </div> */}
+          </div>
 
-          <Tabs defaultValue="send" className="mt-5">
+          {/* <Tabs defaultValue="send" className="mt-5">
             <TabsList className="flex items-center justify-center">
               <TabsTrigger className="px-5 lg:px-10" value="send">
                 Blink
               </TabsTrigger>
-              {/* <TabsTrigger className="px-5 lg:px-10" value="qr">
+              <TabsTrigger className="px-5 lg:px-10" value="qr">
                     Scan QR
-                  </TabsTrigger> */}
+                  </TabsTrigger>
               <Button
                 onClick={onCopy}
                 variant={`ghost`}
@@ -210,7 +263,7 @@ const SingleListingClient = ({ listingId }: PageProps) => {
                 // actionApiUrl={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}`}
               />
             </TabsContent>
-            {/* <TabsContent
+            <TabsContent
                   value="qr"
                   className="flex flex-col items-center justify-center"
                 >
@@ -221,21 +274,43 @@ const SingleListingClient = ({ listingId }: PageProps) => {
                     className="aspect-square rounded-lg [&>svg]:scale-75 md:[&>svg]:scale-100"
                     url={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}&date=${dateTime}`}
                   />
-                </TabsContent> */}
-          </Tabs>
+                </TabsContent>
+          </Tabs> */}
+          <div className="py-4">
+            <Input
+              type="datetime-local"
+              onChange={(e) => setDateTime(e.target.value)}
+            />
+          </div>
 
-          {/* 
           {!authuser ? (
             <GoogleSignInButton />
           ) : (
-            <Button
-              onClick={() => RequestInspection()}
-              size={`lg`}
-              className="w-full text-white"
-            >
-              Request Inspection
-            </Button>
-          )} */}
+            <>
+              {!publicKey ? (
+                <WalletMultiButton
+                  style={{ background: '#ff6203', width: '100%' }}
+                />
+              ) : (
+                <Button
+                  onClick={() => RequestInspection()}
+                  disabled={isTransactionLoading}
+                  size={`lg`}
+                  className="w-full text-white"
+                >
+                  Request Inspection
+                </Button>
+              )}
+            </>
+          )}
+          <Button
+            onClick={onCopy}
+            variant={`ghost`}
+            className="mt-10 w-full px-5  text-center lg:px-10"
+          >
+            Share blink
+            <GoCopy size={20} className=" ml-2 cursor-pointer" />
+          </Button>
         </div>
       </div>
       {/* <div>hsvghs</div> */}

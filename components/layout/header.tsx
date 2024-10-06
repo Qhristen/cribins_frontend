@@ -9,10 +9,11 @@ import { UserNav } from './user-nav';
 import Container from '../container';
 import { useAuth } from '@/context/auth-context';
 import GoogleSignInButton from '../google-auth-button';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 export default function Header() {
   const { theme } = useTheme();
-  // const { user } = useAuth();
+  const { user } = useAuth();
 
   return (
     <div className="fixed left-0 right-0 top-0 z-20 bg-white px-4 dark:bg-black">
@@ -24,7 +25,16 @@ export default function Header() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
-          {/* {user ? <UserNav user={user} /> : <GoogleSignInButton />} */}
+          {user ? (
+            <div className="flex items-center justify-center">
+              <WalletMultiButton
+                style={{ background: 'none', color: 'gray' }}
+              />
+              <UserNav user={user} />
+            </div>
+          ) : (
+            <GoogleSignInButton />
+          )}
           <ThemeToggle />
         </div>
       </nav>
