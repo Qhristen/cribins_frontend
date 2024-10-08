@@ -201,33 +201,6 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             </div>
           </div>
 
-          {/* <div className="border-secondary-200 dark:border-secondary-700/30 mt-2 flex flex-row items-center justify-between rounded-md border p-2 px-4">
-            <div className="flex flex-col items-center justify-center">
-              <div className="datrk:text-white/50"> Amount</div>
-              <div className="text-sm font-bold dark:text-white">
-                {data?.price}SOL
-              </div>
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <div className="dark:text-white/50"> Type</div>
-              <div className="text-sm font-bold dark:text-white">
-                {data?.propertyType}
-              </div>
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <div className="dark:text-white/50"> For</div>
-              <div className="text-sm font-bold dark:text-white">
-                {data?.propertyStatus}
-              </div>
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <div className="dark:text-white/50"> Availability</div>
-              <div className="rounded-full bg-slate-200 p-1 dark:bg-slate-800">
-                <Check name="check" color={'green'} size={13} />
-              </div>
-            </div>
-          </div> */}
-
           <div className="mt-2 py-2">
             <div className="pb-2 font-bold dark:text-white/60">
               Description.
@@ -237,46 +210,8 @@ const SingleListingClient = ({ listingId }: PageProps) => {
             </div>
           </div>
 
-          {/* <Tabs defaultValue="send" className="mt-5">
-            <TabsList className="flex items-center justify-center">
-              <TabsTrigger className="px-5 lg:px-10" value="send">
-                Blink
-              </TabsTrigger>
-              <TabsTrigger className="px-5 lg:px-10" value="qr">
-                    Scan QR
-                  </TabsTrigger>
-              <Button
-                onClick={onCopy}
-                variant={`ghost`}
-                className="px-5 lg:px-10"
-              >
-                Share blink
-                <GoCopy size={20} className=" ml-2 cursor-pointer" />
-              </Button>
-            </TabsList>
-            <TabsContent
-              value="send"
-              className="flex items-center justify-center"
-            >
-              <BlinkComponent
-                actionApiUrl={`${blinkUrl}`}
-                // actionApiUrl={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}`}
-              />
-            </TabsContent>
-            <TabsContent
-                  value="qr"
-                  className="flex flex-col items-center justify-center"
-                >
-                  <DateTimePicker label='Select inspection date' onDateChange={handleDateChange} />
-                  <SolanaQRCode
-                    size={300}
-                    background={'white'}
-                    className="aspect-square rounded-lg [&>svg]:scale-75 md:[&>svg]:scale-100"
-                    url={`${blinkUrl}&amount=${data?.price}&name=${authuser?.name}&email=${authuser?.email}&date=${dateTime}`}
-                  />
-                </TabsContent>
-          </Tabs> */}
           <div className="py-4">
+            <div className="py-2">Select Inspection date</div>
             <Input
               type="datetime-local"
               onChange={(e) => setDateTime(e.target.value)}
