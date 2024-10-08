@@ -24,16 +24,18 @@ export default function Header() {
             {/* Cribins */}
           </Link>
         </div>
-        <div className="flex items-center justify-between gap-4">
-          <Link href={`/#property`} className="text-sm hover:text-primary">
-            Properties
-          </Link>
-          <Link
-            href={`/agent/subscription`}
-            className="text-sm hover:text-primary"
-          >
-            Subscription
-          </Link>
+        <div className="hidden md:block">
+          <div className="flex items-center justify-between gap-4">
+            <Link href={`/#property`} className="text-sm hover:text-primary">
+              Properties
+            </Link>
+            <Link
+              href={`/agent/subscription`}
+              className="text-sm hover:text-primary"
+            >
+              Subscription
+            </Link>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {user ? (

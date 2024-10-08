@@ -1,8 +1,6 @@
+## Cribins
 
-## Overview
-
-This is a cribins website
-
+Cribins offers a secure, user-friendly platform that allows users to search for properties from the comfort of their homes, eliminating the need for unreliable agents. providing virtual property inspections, giving users a comprehensive view of properties before making any commitments, ensuring a smooth, trustworthy, and convenient property search experience.
 
 ## Getting Started
 

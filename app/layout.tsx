@@ -32,10 +32,7 @@ export default async function RootLayout({
         property="og:description"
         content="Find your dream home with our comprehensive real estate platform. Browse listings, view photos, and connect with trusted agents. Your next property awaits!"
       />
-      <meta
-        property="og:image"
-        content="https://cribins.com/adaptive-icon.png"
-      />
+      <meta property="og:image" content="/adaptive-icon.png" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta property="twitter:domain" content="cribins.com" />
@@ -45,10 +42,7 @@ export default async function RootLayout({
         name="twitter:description"
         content="Find your dream home with our comprehensive real estate platform. Browse listings, view photos, and connect with trusted agents. Your next property awaits!"
       />
-      <meta
-        name="twitter:image"
-        content="https://cribins.com/adaptive-icon.png"
-      />
+      <meta name="twitter:image" content="/adaptive-icon.png" />
       <body className={`${plus_Jakarta_Sans.className}`}>
         <NextTopLoader showSpinner={false} />
         <Providers>
